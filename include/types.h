@@ -1,28 +1,31 @@
-/*
- * Created by zxh on 2018/02/20 . All rights reserved.
- */
 
-#ifndef YEQU_INCLUDE_TYPES_H
-#define YEQU_INCLUDE_TYPES_H
+// @Name   : TYPES_H 
+//
+// @Author : Yukang Chen (moorekang@gmail.com)
+// @Date   : 2012-01-09 20:33:45
+//
+// @Brief  :
 
-typedef signed char             int8_t;
-typedef unsigned char           uint8_t;
-typedef short                   int16_t;
-typedef unsigned short          uint16_t;
-typedef int                     int32_t;
-typedef unsigned int            uint32_t;
-typedef long long               int64_t;
-typedef unsigned long long      uint64_t;
+#if !defined(TYPES_H)
+#define TYPES_H
 
-typedef uint32_t                uintptr_t;
-typedef int32_t                 intptr_t;
-typedef uint32_t                size_t;
-typedef int32_t                 ssize_t;
 
-typedef uint8_t                 bool;
-#define TRUE                    ((bool) 1)
-#define FALSE                   ((bool) 0)
+#ifndef USE_SYS
 
-#define NULL                    ((void *) 0)
+#define NULL 0
+typedef unsigned long      size_t;
 
-#endif /* YEQU_INCLUDE_TYPES_H */
+#endif
+
+typedef unsigned long long u64;
+typedef signed long long   s64;
+typedef unsigned int       u32;
+typedef signed int         s32;
+typedef unsigned short     u16;
+typedef signed short       s16;
+typedef unsigned char      u8;
+typedef signed char        s8;
+
+
+#endif
+

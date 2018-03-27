@@ -1,49 +1,54 @@
-/*
- * Created by zxh on 2018/02/20 . All rights reserved.
- */
 
-#ifndef YEQU_INCLUDE_STRING_H
-#define YEQU_INCLUDE_STRING_H
+// @Name   : STRING_H
+//
+// @Author : Yukang Chen (moorekang@gmail.com)
+// @Date   : 2012-01-08 21:55:28
+//
+// @Brief  :
+
+#if !defined(STRING_H)
+#define STRING_H
 
 #include <types.h>
+#include <screen.h>
 
-/* copy n bytes of src to dest. */
-void *memcpy(void *dest, const void *src, size_t n);
-void *memmove(void *dest, const void *src, size_t n);
+#define abs(x) ((x < 0) ? (-(x)): (x) )
 
-/* set N bytes of S to C. */
-void *memset(void *s, int c, size_t n);
+typedef char* va_list;
 
-/* compare N bytes of S1 and S2. */
-int memcmp(const void *s1, const void *s2, size_t n);
+#define INTSIZEOF(n) ((sizeof(n)+sizeof(int)-1) & ~(sizeof(int)-1))
+#define va_start(ap, format) ( ap = (va_list)(&format) + INTSIZEOF(format))
+#define va_end(ap) ( ap=(va_list)0 )
+#define va_arg(ap, type) ( *(type*) ((ap += INTSIZEOF(type)) - INTSIZEOF(type)))
 
-/* copy SRC to DEST. */
-char *strcpy(char *dest, const char *src);
+void strcpy(char* dest, char* src);
+void strncpy(char* dest, char* src, size_t cnt);
+void* strcat(char* dest, const char* src);
+s32  strncmp(const char* v1, const char* v2, u32 n);
+s32  strcmp(const char* v1, const char* v2);
 
-/* copy no more than N characters of SRC to DEST. */
-char *strncpy(char *dest, const char *src, size_t n);
-size_t strlcpy(char *dest, const char *src, size_t n);
+void puts(const char* text);
+size_t strlen(const char* str);
 
-/* append SRC onto DEST. */
-char *strcat(char *dest, const char *src);
+int atoi(char* s);
+int isspace(char c);
+int isalpha(char c);
+int isdigit(char c);
 
-/* append no more than N characters of SRC to DEST */
-char *strncar(char *dest, const char *src, size_t n);
+void* memset(void* addr, unsigned char v, size_t cnt);
+void* memcpy(void *dest, const void *src, size_t cnt);
+void* memmove(void* dest, const void* src, size_t cnt);
+u16*  memsetw(u16* dest, u16 val, size_t count);
+s32   memcmp(const void* v1, const void* v2, u32 n);
 
-/* compare S1 and S2. */
-int strcmp(const char *s1, const char *s2);
+#ifdef USR
+#include <syscall.h>
+int _sprintf(char* buf, const char* format, va_list args);
+int printf(const char* format, ... );
+int sprintf(char* buf, const char* format, ...);
+#else
+int printk(const char* format, ... );
+int sprintk(char* buf, const char* format, ...);
+#endif
 
-/* compare N characters of S1 and S2. */
-int strncmp(const char *s1, const char *s2, size_t n);
-
-/* locate characters in string */
-char *strchr(const char *s, char c);
-
-/* calculates the length of string, excludeing the terminating null byte ('\0') */
-size_t strlen(const char *s);
-size_t strnlen(const char *s, size_t n);
-
-/* convert the interger D to s string and save the string in BUF */
-void itoa(char *buf, int base, int d);
-
-#endif /* YEQU_INCLUDE_STRING_H */
+#endif

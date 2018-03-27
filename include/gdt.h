@@ -1,66 +1,73 @@
-/*
- * Created by zxh on 2018/02/21 . All rights reserved.
- * 
- * Segmentation data structures and constants, reference XV6.
- */
 
-#ifndef YEQU_INCLUDE_SYS_GDT_H
-#define YEQU_INCLUDE_SYS_GDT_H
+/*******************************************************************************
+ *
+ *      @name   : GDT_H
+ *
+ *      @author : Yukang Chen (moorekang@gmail.com)
+ *      @date   : 2012-08-18 10:01:00
+ *
+ *      @brief  :
+ *
+ *******************************************************************************/
+
+#if !defined(GDT_H)
+#define GDT_H
 
 #include <types.h>
 
-struct gdt_desc {
-        uint32_t        limit_low       : 16;   /* low bits of segment limit */
-        uint32_t        base_low        : 16;   /* low bits of segment base address */
-        uint32_t        base_mid        : 8;    /* middle bits of segment base address */
-        
-        uint32_t        type            : 4;    /* segment type */
-        uint32_t        s               : 1;    /* 0 = system, 1 = application */
-        uint32_t        dpl             : 2;    /* descriptor privilige level */
-        uint32_t        present         : 1;    /* present */
+#define NR_GDTENTRY 6
 
-        uint32_t        limit_high      : 4;    /* high bits of segment limit */
-        uint32_t        avl             : 1;    /* unused (available for software use) */
-        uint32_t        r               : 1;    /* reserved */
-        uint32_t        db              : 1;    /* 0 = 16-bit segment, 1 = 32-bit segment */
-        uint32_t        g               : 1;    /* granularity: limit scaled by 4K when set */
-        uint32_t        base_high       : 8;    /* high bits of segment base address */
+/* Defines a GDT entry  */
+/* this page is a good refence */
+/* http://wiki.osdev.org/Global_Descriptor_Table */
+struct gdt_entry {
+    u32        limit_lo:16;    // Low bits of segment limit
+    u32        base_lo :16;    // Low bits of segment base address
+    u32        base_mi :8;     // Middle bits of segment base address
+    
+    u32        type    :4;     // Segment type (see STS_ constants)
+    u32        s       :1;     // 0 = system, 1 = application
+    u32        dpl     :2;     // Descriptor Privilege Level
+    u32        present :1;     // Present
+    
+    u32        limit_hi:4;     // High bits of segment limit
+    u32        avl     :1;     // Unused (available for software use)
+    u32        r       :1;     // Reserved
+    u32        db      :1;     // 0 = 16-bit segment, 1 = 32-bit segment
+    u32        g       :1;     // Granularity: limit scaled by 4K when set
+    u32        base_hi :8;     // High bits of segment base address
 } __attribute__((packed));
 
 struct gdt_ptr {
-        uint16_t        limit;
-        uint32_t        base;
+    u16  limit;
+    u32  base;
 } __attribute__((packed));
 
 
-/* application segment type bits */
-#define STA_X           0x8     /* executable segment */
-#define STA_E           0x4     /* expand down (non-executable segment) */
-#define STA_C           0x4     /* conforming code segment (executable only) */
-#define STA_W           0x2     /* writeable (non-executable segment) */
-#define STA_R           0x2     /* readable (executable segment) */
-#define STA_A           0x1     /* accessed */
-
-/* system segment type bits */
-#define STS_LDT         0x2     /* local descriptor table */
-#define STS_TG          0x5     /* task gate / coum transmitions */
-#define STS_TA          0x9     /* available 32-bit TSS */
-#define STS_TB          0xB     /* busy 32-bit TSS */
-#define STS_CG          0xC     /* 32-bit call gate */
-#define STS_IS          0xE     /* 32-bit interrupt gate */
-#define STS_TRG         0xF     /* 32-bit trap gate */
-
-#define RING0           0
-#define RING3           3
-
-#define KERN_CS         (1 << 3)
-#define KERN_DS         (2 << 3)
-#define USER_CS         ((3 << 3) | 3)
-#define USER_DS         ((4 << 3) | 3)
+// Application segment type bits
+#define STA_X       0x8     // Executable segment
+#define STA_E       0x4     // Expand down (non-executable segments)
+#define STA_C       0x4     // Conforming code segment (executable only)
+#define STA_W       0x2     // Writeable (non-executable segments)
+#define STA_R       0x2     // Readable (executable segments)
+#define STA_A       0x1     // Accessed
 
 
-void gdt_init(void);
+// System segment type bits
+#define STS_LDT     0x2     // Local Descriptor Table
+#define STS_TG      0x5     // Task Gate / Coum Transmitions
+#define STS_TA      0x9     // Available 32-bit TSS
+#define STS_TB      0xB     // Busy 32-bit TSS
+#define STS_CG      0xC     // 32-bit Call Gate
+#define STS_IG      0xE     // 32-bit Interrupt Gate
+#define STS_TRG     0xF     // 32-bit Trap Gate
+#define RING0 0
+#define RING3 3
 
-extern void gdt_flush(uint32_t);
+#define KERN_CS (1<<3)
+#define KERN_DS (2<<3)
+#define USER_CS ((3<<3)|3)
+#define USER_DS ((4<<3)|3)
 
-#endif /* YEQU_INCLUDE_SYS_GDT_H */
+#endif
+
