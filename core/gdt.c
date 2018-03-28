@@ -11,6 +11,7 @@
 #include <gdt.h>
 #include <asm.h>
 
+extern struct tss_desc tss;
 
 struct gdt_entry gdt[NR_GDTENTRY];
 struct gdt_ptr gp; //also in start.asm
@@ -39,6 +40,12 @@ void set_ldt(struct gdt_entry* seg, u32 base){
     seg->s = 0;
 }
 
+void set_tss(struct gdt_entry* seg, u32 base){
+    set_seg(seg, base, 0, 0, STS_TA);
+    seg->limit_lo = 0x68;
+    seg->s = 0;
+}
+
 void gdt_init(void) {
     puts("[gdt]  .... ");
     memset(gdt, 0, sizeof(gdt));
@@ -49,6 +56,7 @@ void gdt_init(void) {
     set_seg(&gdt[2], 0, 0xffffffff, 0, STA_W);
     set_seg(&gdt[3], 0, 0xffffffff, 3, STA_X | STA_R);
     set_seg(&gdt[4], 0, 0xffffffff, 3, STA_W);
+    set_tss(&gdt[5], (u32)&tss);
     // load gdt
     gdt_flush();
     // load tss

@@ -204,4 +204,25 @@ void idt_init() {
 }
 
 
+/* This gets called from our ASM interrupt handler stub. */
+void hwint_handler(struct registers_t* regs) {
+    if ((regs->cs & 3) == 3) {
+        current->p_trap = regs;
+    }
 
+    /* Find out if we have a custom handler to run for this
+    *  IRQ and then run it */
+    isq_t handler = irq_routines[regs->int_no];
+    if (regs->int_no < 32) {
+        if(handler)
+            handler(regs);
+    } else {
+        irq_eoi(regs->int_no);
+        if(handler)
+            handler(regs);
+    }
+    /* user-mode */
+    if((regs->cs & 3) == 3 && current != 0 ) {
+        sched();
+    }
+}

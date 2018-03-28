@@ -23,36 +23,6 @@ setup:
 	mov si, setup_msg
 	call print_str
 
-read_info:
-	mov ax, 0x9000
-	mov ds, ax
-
-	;; Now get memory size and save at 0x90002
-	;; This may just report up to 64M.
-	;; It only reports contiguous (usable) RAM.
-	mov ah, 0x88
-	int 0x15
-	mov [2], ax
-
-	mov ax, setupseg
-	mov ds, ax
-	mov es, ax
-	mov ss, ax
-	mov sp, 0xffff
-
-	mov ax, setupseg
-	mov es, ax
-	mov bx, setupoffset+setupsize ; put kernel at here now
-	mov ah, 2
-	mov dl, [0]
-	mov ch, 0
-	;0,1 is for boot, setupsize/512 for setup.bin
-	mov cl, 3
-	mov al, systemsize/512
-.readfloppy:
-	int 0x13
-    dec al
-	jnz .readfloppy
 
 	;; move system to 0x00000
 	;; this is OK for our kernel.bin is small
@@ -126,12 +96,12 @@ gdt_null:
 	dw 0x0000
 gdt_system_code:
 	;; 64 MB
-	dw 0x3fff
+	dw 0xffff
 	dw 0x0000
 	dw 0x9a00
 	dw 0x00c0
 gdt_syste_data:
-	dw 0x3fff
+	dw 0xffff
 	dw 0x0000
 	dw 0x9200
 	dw 0x00c0

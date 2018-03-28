@@ -192,7 +192,7 @@ common_stub:
     mov eax, esp   ; Push the stack
 
     push eax
-    mov eax, gdt_flush
+    mov eax, hwint_handler
     call eax       ; A special call, preserves the 'eip' register
     pop eax
 
