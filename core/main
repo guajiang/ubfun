@@ -1,29 +1,4 @@
-
-// @Name   : main.c
-//
-// @Author : Yukang Chen (moorekang@gmail.com)
-// @Date   : 2012-01-03 17:33:50
-//
-// @Brief  : The kernel main entry point
-
-#include <asm.h>
-#include <screen.h>
-#include <string.h>
-#include <mm.h>
-#include <hd.h>
-#include <task.h>
-#include <time.h>
-#include <file.h>
-#include <sysfile.h>
-#include <exec.h>
-#include <syscall.h>
-
-u32 init_esp_start;
-s32 init = 0;
-
-void init_user();
-extern char __kimg_end__;
-
+/* Some screen stuff. */
 /* The number of columns. */
 #define COLUMNS 80
 /* The number of lines. */
@@ -32,6 +7,8 @@ extern char __kimg_end__;
 #define ATTRIBUTE 7
 /* The video memory address. */
 #define VIDEO 0xB8000
+
+/* Variables. */
 /* Save the X position. */
 static int xpos;
 /* Save the Y position. */
@@ -39,7 +16,31 @@ static int ypos;
 /* Point to the video memory. */
 static volatile unsigned char *video;
 
+/* Forward declarations. */
+void kmain();
+static void cls(void);
+static void itoa(char *buf, int base, int d);
+static void putchar(int c);
+void printf(const char *format, ...);
 
+/* Check if MAGIC is valid and print the Multiboot information structure
+        pointed by ADDR. */
+void kmain()
+{
+
+    /* Clear the screen. */
+    cls();
+    /* Print out the flags. */
+    putchar('1');
+putchar('1');
+putchar('1');
+putchar('1');
+	printf("1234556657\n");
+
+
+}
+
+/* Clear the screen and kmainialize VIDEO, XPOS and YPOS. */
 static void
 cls(void)
 {
@@ -53,6 +54,7 @@ cls(void)
     xpos = 0;
     ypos = 0;
 }
+
 /* Convert the integer D to a string and save the string in BUF. If
         BASE is equal to 'd', interpret that D is decimal, and if BASE is
         equal to 'x', interpret that D is hexadecimal. */
@@ -181,22 +183,5 @@ void printf(const char *format, ...)
                 break;
             }
         }
-    }
-}
-
-void kmain(u32 init_stack) {
-    init_esp_start = init_stack;
-    cls();
-    printf("111111");
-
-    idt_init();
-
-}
-
-void init_user() {
-    //test_file();
-    do_exec("/home/init", NULL);
-    while(1) {
-        ;
     }
 }
