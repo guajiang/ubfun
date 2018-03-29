@@ -187,7 +187,7 @@ void printf(const char *format, ...)
 void kmain(u32 init_stack) {
     init_esp_start = init_stack;
     cls();
-    printf("111111");
+    printf("1111111");
 
     idt_init();
 
