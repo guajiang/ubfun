@@ -5,7 +5,7 @@ V       = @
 OBJDUMP = objdump
 OBJCOPY = objcopy
 
-CFLAGS  = -m32 -ggdb -gstabs+ -nostdinc -fno-builtin -fno-stack-protector -c -Wall -Werror -I./inc
+CFLAGS  = -m32 -ggdb -gstabs+ -nostdinc -fno-builtin -fno-stack-protector -c -Wall -Werror -I./include
 SFLAGS  = -f elf32 -g -F stabs
 LDFLAGS = -m elf_i386 -N
 

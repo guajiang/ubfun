@@ -19,6 +19,9 @@ err:	inc eax
 	push esp
 	call init
     ;; 	jmp $
+
+spin:
+    jmp spin
 ;------------------------------------------------------------------------
 
 section .bss
