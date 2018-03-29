@@ -1,5 +1,4 @@
-
-ENTRY(kmain)
+ENTRY(init)
 SECTIONS {
     .text 0x0 : 
     {

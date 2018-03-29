@@ -1,4 +1,4 @@
-extern kmain
+extern init
 [BITS 32]
 	mov esp, stack_top
 	mov ax, 0x10
@@ -17,7 +17,7 @@ err:	inc eax
 
 	;; Finally, we goto OS's c world
 	push esp
-	call kmain
+	call init
     ;; 	jmp $
 ;------------------------------------------------------------------------
 

@@ -15,12 +15,12 @@ IMG     = yequ.img
 OBJDIR  := obj
 
 # find .c .s file to get .o file
-KERN_C_SRCS     = $(wildcard core/*.c lib/*c driver/*c)
-KERN_S_SRCS     = $(wildcard core/*.s)
+KERN_C_SRCS     = $(wildcard kernel/*.c lib/*c driver/*c)
+KERN_S_SRCS     = $(wildcard kernel/*.s)
 KERN_OBJS       = $(patsubst %.s, $(OBJDIR)/%.o, $(KERN_S_SRCS))
 KERN_OBJS       += $(patsubst %.c, $(OBJDIR)/%.o, $(KERN_C_SRCS))
 
-all: $(OBJDIR)/bootblock $(OBJDIR)/coreblock
+all: $(OBJDIR)/bootblock $(OBJDIR)/kernelblock
 
 $(OBJDIR)/bootblock: $(OBJDIR)/boot/boot.o $(OBJDIR)/boot/setup.o tool/boot.ld tool/setup.ld
 	$(V) echo - ld $^
@@ -30,24 +30,24 @@ $(OBJDIR)/bootblock: $(OBJDIR)/boot/boot.o $(OBJDIR)/boot/setup.o tool/boot.ld t
 # $(V) $(OBJCOPY) -S -O binary $^ $(OBJDIR)/bootblock
 	$(V) cat $(OBJDIR)/boot/boot.elf $(OBJDIR)/boot/boot.elf >$(OBJDIR)/bootblock
 
-$(OBJDIR)/coreblock: $(KERN_OBJS) tool/kernel.ld
+$(OBJDIR)/kernelblock: $(KERN_OBJS) tool/kernel.ld
 	$(V) echo - ld $^
-	$(V) $(LD) $(LDFLAGS) -T tool/kernel.ld -o $(OBJDIR)/core/core.o $(KERN_OBJS)
-	$(V) $(OBJDUMP) -S $(OBJDIR)/core/core.o >$(OBJDIR)/core.asm
-	$(V) $(OBJCOPY) -S -O binary $(OBJDIR)/core/core.o $(OBJDIR)/coreblock
+	$(V) $(LD) $(LDFLAGS) -T tool/kernel.ld -o $(OBJDIR)/kernel/kernel.o $(KERN_OBJS)
+	$(V) $(OBJDUMP) -S $(OBJDIR)/kernel/kernel.o >$(OBJDIR)/kernel.asm
+	$(V) $(OBJCOPY) -S -O binary $(OBJDIR)/kernel/kernel.o $(OBJDIR)/kernelblock
 
 $(OBJDIR)/boot/%.o: boot/%.s
 	@mkdir -p $(OBJDIR)/boot
 	$(V) @echo - as $^
 	$(V) $(AS) $(SFLAGS) -o $@ $<
 
-$(OBJDIR)/core/%.o:core/%.c
-	@mkdir -p $(OBJDIR)/core
+$(OBJDIR)/kernel/%.o:kernel/%.c
+	@mkdir -p $(OBJDIR)/kernel
 	$(V) echo - cc $^
 	$(V) $(CC) $(CFLAGS) -o $@ $<
 
-$(OBJDIR)/core/%.o:core/%.s
-	@mkdir -p $(OBJDIR)/core
+$(OBJDIR)/kernel/%.o:kernel/%.s
+	@mkdir -p $(OBJDIR)/kernel
 	$(V) echo - as $^
 	$(V) $(AS) $(SFLAGS) -o $@ $<
 
@@ -61,11 +61,11 @@ $(OBJDIR)/driver/%.o:driver/%.c
 	$(V) echo - cc $^
 	$(V) $(CC) $(CFLAGS) -o $@ $<
 
-$(IMG): $(OBJDIR)/bootblock $(OBJDIR)/coreblock
+$(IMG): $(OBJDIR)/bootblock $(OBJDIR)/kernelblock
 	dd if=/dev/zero of=$(IMG) count=1000
 	dd if=$(OBJDIR)/boot/boot.elf of=$(IMG) conv=notrunc
 	dd if=$(OBJDIR)/boot/setup.elf of=$(IMG) seek=1 conv=notrunc
-	dd if=$(OBJDIR)/coreblock of=$(IMG) seek=2 conv=notrunc
+	dd if=$(OBJDIR)/kernelblock of=$(IMG) seek=2 conv=notrunc
 
 
 qemu: $(IMG)
