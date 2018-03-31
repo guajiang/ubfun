@@ -1,5 +1,7 @@
 /*
  * Created by zxh on 2018/02/24 . All rights reserved.
+ * 
+ * Some x86 instructions with C implementation.
  */
 
 #ifndef YEQU_INCLUDE_ISTR_H
@@ -50,4 +52,8 @@ static inline void stosb(void *addr, int data, int cnt)
                         "memory", "cc");
 }
 
+static inline void ltr(uint32_t n)
+{
+	asm volatile("ltr %%ax"::"a"(n));
+}
 #endif /* YEQU_INCLUDE_ISTR_H */

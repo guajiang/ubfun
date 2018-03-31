@@ -45,6 +45,14 @@ void *memset(void *s, int c, size_t n)
         return s;
 }
 
+unsigned short *memsetw(unsigned short *s, unsigned short c, size_t n)
+{
+	unsigned short *p = (unsigned short *)s;
+	while (--n >= 0)
+		*p++ = c;
+	return s;
+}
+
 int memcmp(const void *s1, const void *s2, size_t n)
 {
         const uint8_t *v1 = (const uint8_t *)s1;

@@ -1,35 +1,35 @@
 /*
  * Created by zxh on 2018/02/21 . All rights reserved.
- * 
+ *
  * Segmentation data structures and constants, reference XV6.
  */
 
-#ifndef YEQU_INCLUDE_SYS_GDT_H
-#define YEQU_INCLUDE_SYS_GDT_H
+#ifndef YEQU_INCLUDE_GDT_H
+#define YEQU_INCLUDE_GDT_H
 
 #include <types.h>
 
-struct gdt_desc {
-        uint32_t        limit_low       : 16;   /* low bits of segment limit */
-        uint32_t        base_low        : 16;   /* low bits of segment base address */
-        uint32_t        base_mid        : 8;    /* middle bits of segment base address */
-        
-        uint32_t        type            : 4;    /* segment type */
-        uint32_t        s               : 1;    /* 0 = system, 1 = application */
-        uint32_t        dpl             : 2;    /* descriptor privilige level */
-        uint32_t        present         : 1;    /* present */
+struct seg_desc {
+    uint32_t        limit_low       : 16;   /* low bits of segment limit */
+    uint32_t        base_low        : 16;   /* low bits of segment base address */
+    uint32_t        base_mid        : 8;    /* middle bits of segment base address */
 
-        uint32_t        limit_high      : 4;    /* high bits of segment limit */
-        uint32_t        avl             : 1;    /* unused (available for software use) */
-        uint32_t        r               : 1;    /* reserved */
-        uint32_t        db              : 1;    /* 0 = 16-bit segment, 1 = 32-bit segment */
-        uint32_t        g               : 1;    /* granularity: limit scaled by 4K when set */
-        uint32_t        base_high       : 8;    /* high bits of segment base address */
+    uint32_t        type            : 4;    /* segment type */
+    uint32_t        s               : 1;    /* 0 = system, 1 = application */
+    uint32_t        dpl             : 2;    /* descriptor privilige level */
+    uint32_t        present         : 1;    /* present */
+
+    uint32_t        limit_high      : 4;    /* high bits of segment limit */
+    uint32_t        avl             : 1;    /* unused (available for software use) */
+    uint32_t        r               : 1;    /* reserved */
+    uint32_t        db              : 1;    /* 0 = 16-bit segment, 1 = 32-bit segment */
+    uint32_t        g               : 1;    /* granularity: limit scaled by 4K when set */
+    uint32_t        base_high       : 8;    /* high bits of segment base address */
 } __attribute__((packed));
 
 struct gdt_ptr {
-        uint16_t        limit;
-        uint32_t        base;
+    uint16_t        limit;
+    uint32_t        base;
 } __attribute__((packed));
 
 
@@ -58,9 +58,13 @@ struct gdt_ptr {
 #define USER_CS         ((3 << 3) | 3)
 #define USER_DS         ((4 << 3) | 3)
 
+#define TSS0		5
+#define _TSS		(TSS0 << 3)
+#define LDT0		6
+#define _LDT(n)		((LDT0 + n) << 3)
 
 void gdt_init(void);
 
 extern void gdt_flush(uint32_t);
 
-#endif /* YEQU_INCLUDE_SYS_GDT_H */
+#endif /* YEQU_INCLUDE_GDT_H */

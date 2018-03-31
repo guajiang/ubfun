@@ -14,8 +14,12 @@ void *memmove(void *dest, const void *src, size_t n);
 /* set N bytes of S to C. */
 void *memset(void *s, int c, size_t n);
 
+/* set N word of S to C. */
+unsigned short *memsetw(unsigned short *s, unsigned short c, size_t n);
+
 /* compare N bytes of S1 and S2. */
 int memcmp(const void *s1, const void *s2, size_t n);
+
 
 /* copy SRC to DEST. */
 char *strcpy(char *dest, const char *src);

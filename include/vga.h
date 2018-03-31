@@ -2,36 +2,34 @@
  * Created by zxh on 2018/02/24 . All rights reserved.
  */
 
-#ifndef YRQU_INCLUDE_VGA_H
-#define YEQU_INCLUDE_VGA_H
+#ifndef INCLUDE_VGA_H
+#define INCLUDE_VGA_H
 
-/* the video memory address */
-#define VIDEO 0xB8000
-
-//* The attribute of an character. */
-#define ATTRIBUTE 7
+#include <types.h>
 
 /* color */
-typedef enum color {
-	C_BLACK = 0,
-	C_BLUE = 1,
-	C_GREEN = 2,
-	C_CYAN = 3,
-	C_RED = 4,
-	C_MAGENTA = 5,
-	C_BROWN = 6,
-	C_LIGHT_GREY = 7,
-	C_DARK_GREY = 8,
-	C_LIGHT_BLUE = 9,
-	C_LIGHT_GREEN = 10,
-	C_LIGHT_CYAN = 11,
-	C_LIGHT_RED = 12,
-	C_LIGHT_MAGENTA = 13,
-	C_LIGHt_BROWN = 14,
-	C_WHITE = 15
-} color_t;
+typedef
+enum vga_color {
+	VC_BLACK = 0,
+	VC_BLUE = 1,
+	VC_GREEN = 2,
+	VC_RED = 4,
+	VC_WHITE = 15
+} vga_color_t;
 
-void cls();
-void putc(int c);
+/* clear screen */
+void vga_init();
+
+/* screen put a character */
+void vga_putc(char c);
+
+/* screen put a character with color */
+void vga_putc_color(char c, vga_color_t back, vga_color_t fore);
+
+/* screen put a string with terminated '\0' */
+void vga_puts(char *cstr);
+
+/* screen put a string with terminated '\0' and color */
+void vga_puts_color(char *cstr, vga_color_t back, vga_color_t fore);
 
 #endif /* YEQU_INCLUDE_VGA_H */
